@@ -1,21 +1,8 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "slinked-list.h"
 #include "../testing/testing.h"
-
-static const int FAIL = 0;
-static const int SUCCESS = 1;
-
-struct Node
-{
-    int value;
-    struct Node *next;
-};
-
-struct SLinkedList
-{
-    struct Node *head;
-};
 
 void free_sll(struct SLinkedList *sll)
 {
@@ -28,12 +15,12 @@ void free_sll(struct SLinkedList *sll)
     }
 
     free(sll);
-};
+}
 
 int sll_is_empty(struct SLinkedList *sll)
 {
     return !!sll->head;
-};
+}
 
 void sll_insert(int value, struct SLinkedList *sll)
 {
@@ -42,7 +29,7 @@ void sll_insert(int value, struct SLinkedList *sll)
     node->value = value;
     node->next = sll->head;
     sll->head = node;
-};
+}
 
 int sll_remove(int key, struct SLinkedList *sll)
 {
@@ -56,7 +43,7 @@ int sll_remove(int key, struct SLinkedList *sll)
         free(sll->head);
         sll->head = sll->head->next;
         return SUCCESS;
-    };
+    }
 
     struct Node *current = sll->head->next;
     struct Node *previous = sll->head;
@@ -73,7 +60,7 @@ int sll_remove(int key, struct SLinkedList *sll)
     }
 
     return FAIL;
-};
+}
 
 
 struct SLinkedList *init_sll(void)
@@ -91,4 +78,4 @@ int main(int argc, char **argv)
     assert(sll->head->value == 0);
     free_sll(sll);
     return 0;
-};
+}
