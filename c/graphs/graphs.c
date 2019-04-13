@@ -75,6 +75,62 @@ void dfs(struct Graph *g, int v)
     g->state[v] = PROCESSED;
 }
 
+bool hascycle(struct Graph *g, int v)
+{
+    struct EdgeNode *p;
+    int y;
+
+    g->state[v] = PROCESSING;
+
+    p = g->edges[v];
+    while (p)
+    {
+        y = p->y;
+        if (g->state[y] == PROCESSING)
+        {
+            return true;
+        }
+        else if (g->state[y] == UNDISCOVERED)
+        {
+            g->edges[y]->parent = v;
+            return hascycle(g, y);
+        }
+        p = p->next;
+    }
+
+    g->state[v] = PROCESSED;
+
+    return false;
+}
+
+bool toposort(struct Graph *dag, int root, struct Stack *sorted)
+{
+    struct EdgeNode *p;
+    enum NodeState state;
+    int y;
+
+    p = dag->edges[root];
+    while (p)
+    {
+        y = p->y;
+        state = dag->state[y];
+        if (state == UNDISCOVERED)
+        {
+            return toposort(dag, y, sorted);
+        }
+        else if (state == PROCESSING)
+        {
+            return false; // ERROR: cycle in DAG
+        }
+        p = p->next;
+    }
+
+    dag->state[root] = PROCESSED;
+    push(sorted, root);
+
+    return true;
+}
+
 int main(int argc, char **argv)
 {
     struct Graph *g = malloc(sizeof(struct Graph));
