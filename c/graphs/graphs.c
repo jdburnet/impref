@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include "graphs.h"
 
@@ -15,6 +16,7 @@ void init(struct Graph *g, bool directed)
     {
         g->edges[i] = NULL;
         g->degree[i] = 0;
+        g->state[i] = UNDISCOVERED;
     }
 }
 
@@ -45,6 +47,34 @@ void _insertedge(struct Graph *g, int x, int y)
     g->numedges++;
 }
 
+void bfs(struct Graph *g, int start)
+{
+    /* import queue once integrated and implement */
+}
+
+void dfs(struct Graph *g, int v)
+{
+    struct EdgeNode *p;
+    int y;
+
+    g->state[v] = PROCESSING;
+
+    p = g->edges[v];
+    while (p)
+    {
+        y = p->y;
+        if (g->state[y] == UNDISCOVERED)
+        {
+            g->edges[y]->parent = v;
+            printf("%d: %d", v, y);
+            dfs(g, y);
+        }
+        p = p->next;
+    }
+
+    g->state[v] = PROCESSED;
+}
+
 int main(int argc, char **argv)
 {
     struct Graph *g = malloc(sizeof(struct Graph));
@@ -59,5 +89,6 @@ int main(int argc, char **argv)
     insertedge(g, 1, 2);
     assert(g->edges[1]->y == 2);
     assert(g->edges[2]->y == 1);
+
     return 0;
 }
