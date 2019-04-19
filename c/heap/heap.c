@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "heap.h"
@@ -31,11 +32,11 @@ void maxheapify(struct Heap *h, unsigned int i)
     int left = heapleft(i);
     int right = heapright(i);
     int largest = i;
-    if (left < h->size && h->array[left] > h->array[largest])
+    if (left < h->heapsize && h->array[left] > h->array[largest])
     {
         largest = left;
     }
-    if (right < h->size && h->array[right] > h->array[largest])
+    if (right < h->heapsize && h->array[right] > h->array[largest])
     {
         largest = right;
     }
@@ -55,7 +56,8 @@ void build_max_heap(struct Heap *heap, int *array, unsigned int arraysize)
 
     unsigned int i;
 
-    heap->size = arraysize;
+    heap->arraysize = arraysize;
+    heap->heapsize = arraysize;
 
     for (i = 0; i < arraysize; i++)
     {
@@ -79,12 +81,30 @@ void printarray(int *array, unsigned int size)
     printf("}\n");
 }
 
+void heapsort(struct Heap *h, int *array, unsigned int arraysize)
+{
+    unsigned int i;
+
+    build_max_heap(h, array, arraysize);
+    for (i = arraysize; i > 1; i--)
+    {
+        swap(h->array, h->array+h->heapsize-1);
+        h->heapsize--;
+        maxheapify(h, 0);
+    }
+}
+
 int main(int argc, char **argv)
 {
-    int array[5] = { 0, 1, 2, 3, 4, };
-    printarray(array, 5);
+    unsigned int i;
+
+    int sorted[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, };
+    int unsorted[10] = { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, };
     struct Heap *h = malloc(sizeof(struct Heap));
-    build_max_heap(h, array, 5);
-    printarray(h->array, 5);
+    heapsort(h, unsorted, 10);
+    for (i = 0; i < 10; i++)
+    {
+        assert(h->array[i] == sorted[i]);
+    }
     return 0;
 }
