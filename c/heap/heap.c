@@ -94,6 +94,52 @@ void heapsort(struct Heap *h, int *array, unsigned int arraysize)
     }
 }
 
+int heapmax(struct Heap *h)
+{
+    if (h->heapsize < 1)
+    {
+        return -1;  // error, underflow
+    }
+
+    return h->array[0];
+}
+
+int extract_heapmax(struct Heap *h)
+{
+    if (h->heapsize < 1)
+    {
+        return -1;  // error, underflow
+    }
+
+    int max = h->array[0];
+    h->array[0] = h->array[h->heapsize];
+    h->heapsize--;
+    maxheapify(h, 0);
+
+    return max;
+}
+
+void heap_increase(struct Heap *h, unsigned int i, int newkey)
+{
+    if (newkey < h->array[i])
+    {
+        return; // error, new key smaller than current key
+    }
+
+    h->array[i] = newkey;
+    while (i > 0 && h->array[heap_parent(i)] < h->array[i])
+    {
+        swap(h->array+heap_parent(i), h->array+i);
+        i = heap_parent(i);
+    }
+}
+
+void heapinsert(struct Heap *h, int key)
+{
+    h->heapsize++;
+    heap_increase(h, h->heapsize, key);
+}
+
 int main(int argc, char **argv)
 {
     unsigned int i;
@@ -106,5 +152,14 @@ int main(int argc, char **argv)
     {
         assert(h->array[i] == sorted[i]);
     }
+
+
+    build_max_heap(h, sorted, 10);
+    assert(heapmax(h) == 9);
+    extract_heapmax(h);
+    assert(heapmax(h) == 8);
+    heapinsert(h, 9);
+    assert(heapmax(h) == 9);
+
     return 0;
 }

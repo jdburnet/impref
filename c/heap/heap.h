@@ -14,3 +14,7 @@ void maxheapify(struct Heap *h, unsigned int i);
 void build_max_heap(struct Heap *heap, int *array, unsigned int arraysize);
 void printarray(int *array, unsigned int size);
 void heapsort(struct Heap *h, int *array, unsigned int arraysize);
+int heapmax(struct Heap *h);
+int extract_heapmax(struct Heap *h);
+void heap_increase(struct Heap *h, unsigned int i, int newkey);
+void heapinsert(struct Heap* h, int key);
