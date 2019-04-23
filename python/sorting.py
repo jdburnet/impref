@@ -1,4 +1,6 @@
 def swap(seq, i, j):
+    if i == j:
+        return
     seq[i] = seq[i] + seq[j]
     seq[j] = seq[i] - seq[j]
     seq[i] = seq[i] - seq[j]
@@ -42,3 +44,27 @@ def mergesort(seq):
         seq[k] = right[j]
         j += 1
         k += 1
+
+
+def partition(seq, l, h):
+    firsthigh = l
+    p = h
+
+    for i in range(l, h):
+        if seq[i] < seq[p]:
+            swap(seq, i, firsthigh)
+            firsthigh += 1
+    swap(seq, p, firsthigh)
+
+    return firsthigh
+
+
+def _quicksort(seq, l, h):
+    if l >= h:
+        return
+    p = partition(seq, l, h)
+    _quicksort(seq, l, p - 1)
+    _quicksort(seq, p + 1, h)
+
+def quicksort(seq):
+    return _quicksort(seq, 0, len(seq) - 1)

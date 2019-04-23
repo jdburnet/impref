@@ -23,3 +23,8 @@ def test_insertion_sort(lists):
 def test_mergesort(lists):
     sorting.mergesort(lists.unsorted)
     assert lists.sorted == lists.unsorted
+
+
+def test_quicksort(lists):
+    sorting.quicksort(lists.unsorted)
+    assert lists.sorted == lists.unsorted
